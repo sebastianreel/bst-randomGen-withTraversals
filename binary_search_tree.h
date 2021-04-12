@@ -21,30 +21,32 @@
 template <class T>
 class LinkedBSearchTree : public LinkedBTree<T> {
     private:
-        LinkwedBTreeNode<T>* rootPtr;
+        LinkedBTreeNode<T>* rootPtr;
     protected:
-        LinkedBTreeNode<T>* placeNode(LinkedBTreeNode<T> subTreePtr, LinkedBTreeNode<T>* newNodePtr);
-        LinkedBTreeNode<T>* removeValue(LinkedBTreeNode<T> subTreePtr, const T target, bool& isSuccessful) override;
-        LinkedBTreeNode<T>* removeNode(LinkedBTreeNodeQ<T>* nodePtr);
-        LinkedBTreeNode<T>* removeLeftMostNode(LinkedBTreeNode<T>* inorderSuccessor);
-        LinkedBTreeNode<T>* findNode(LinkedBTreeNode<T>* treePointer, const T& target) const;
+        LinkedBTreeNode<T>* placeNode(LinkedBTreeNode<T>* subTreePtr, LinkedBTreeNode<T>* newNodePtr);
+        LinkedBTreeNode<T>* removeValue(LinkedBTreeNode<T>* subTreePtr, const T target, bool& isSuccessful);
+        LinkedBTreeNode<T>* removeNode(LinkedBTreeNode<T>* nodePtr);
+        LinkedBTreeNode<T>* removeLeftMostNode(LinkedBTreeNode<T>* subTreePtr, T& inorderSuccessor);
+        LinkedBTreeNode<T>* findNode(LinkedBTreeNode<T>* treePtr, const T& target) const;
     public:
         LinkedBSearchTree();
 
         bool isEmpty() const;
         int getHeight() const;
         int getNumOfNodes() const;
-        T getRootData() cosnt;
-        bool add(const T& data);
+        T getRootData() const;
+        void setRootData(const T& newData);
+        bool add(const T& newEntry);
+        bool remove(const T& anEntry);
         void clear();
         T getEntry(const T& anEntry) const;
-        bool contains(const T& anEntry); const;
+        bool contains(const T& anEntry) const;
 
         void preorderTraverse(void visit(T&)) const;
         void inorderTraverse(void visit(T&)) const;
-        void postordrerTraverse(void visit(T&)) const;
+        void postorderTraverse(void visit(T&)) const;
 
-        ~LinkedBSearchTree();
+        LinkedBSearchTree<T>& operator = (const LinkedBSearchTree<T>& rightHandSide);
 };
 #include "binary_search_tree.cpp"
 #endif

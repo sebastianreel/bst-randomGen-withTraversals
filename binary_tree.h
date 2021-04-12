@@ -28,13 +28,14 @@ class LinkedBTree : public TreeInterface<T> {
         LinkedBTreeNode<T>* moveValuesUpTree(LinkedBTreeNode<T>* subTreePtr);
 
         virtual LinkedBTreeNode<T>* findNode(LinkedBTreeNode<T>* treePtr, const T& target, bool& isSuccessful) const;
-
+        virtual LinkedBTreeNode<T>* removeValue(LinkedBTreeNode<T>* subTreePtr, const T target, bool& isSuccessful);
+        
         LinkedBTreeNode<T>* copyTree(const LinkedBTreeNode<T>* oldTreeRootPtr) const;
         void destroyTree(LinkedBTreeNode<T>* subTreePtr);
 
         void preorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const;
         void inorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const;
-        void postorder(void visit(T&), LinkedBTreeNode<T>& treePtr) const;
+        void postorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const;
     public:
         LinkedBTree();
 
@@ -42,6 +43,7 @@ class LinkedBTree : public TreeInterface<T> {
         int getHeight() const;
         int getNumOfNodes() const;
         T getRootData() const;
+        void setRootData(const T& newData);
         bool add(const T& newData);
         bool remove(const T& data);
         void clear();

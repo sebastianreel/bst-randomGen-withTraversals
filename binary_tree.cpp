@@ -20,12 +20,18 @@ int LinkedBTree<T>::getHeightHelper(LinkedBTreeNode<T>* subTreePtr) const{      
     if(subTreePtr == nullptr){
         return 0;
     } else {
-        return 1 + max(getHeightHelper(subTreePtr->getLeftChildPtr()), getHeightHelper(subTreePtr->getRightChildPtr()));
+        return (1 + max(getHeightHelper(subTreePtr->getLeftChildPtr()), getHeightHelper(subTreePtr->getRightChildPtr())));
     }
 }
 
-// template <class T>
-
+template <class T>
+int LinkedBTree<T>::getNumOfNodesHelper(LinkedBTreeNode<T>* subTreePtr) const{
+    if(subTree == nullptr){
+        return 0;
+    } else {
+        return (1 + getNumOfNodesHelper(subTreePtr->getLeftChildPtr()) + getNumOfNodesHelper(subTreePtr->getRightChildPtr()));
+    }
+}
 
 template <class T>
 LinkedBTreeNode<T>* LinkedBTree<T>::balanceAdd(LinkedBTreeNode<T>* subTreePtr, LinkedBTreeNode<T>* newNodePtr){     //balanceAdd aids the add function in working out adding a node to the tree
@@ -47,6 +53,117 @@ LinkedBTreeNode<T>* LinkedBTree<T>::balanceAdd(LinkedBTreeNode<T>* subTreePtr, L
     }
 }
 
+template <class T>
+LinkedBTreeNode<T>* LinkedBTree<T>::moveValuesUpTree(LinkedBTreeNode<T>* subTreePtr){
+    LinkedBTreeNode<T>* temp;
+
+    if(subTreePtr->isLeaf()){
+        delete subTreePtr;
+        subTreePtr = nullptr;
+        return nullptr;
+    } 
+    else if(subTreePtr->getLeftChildPtr() != nullptr && subTreePtr->getRightChildPtr() == nullptr){
+        temp = subTreePtr->getLeftChildPtr();
+        delete subTreePtr;
+        subTreePtr = nullptr;
+        return temp;
+    }
+    else if(subTreePtr->getRightChildPtr() != nullptr && subTreePtr->getLeftChildPtr() == nullptr){
+        temp = subTreePtr->getRightChildPtr();
+        delete subTreePtr;
+        subTreePtr = nullptr;
+        return temp;
+    } else {
+        temp = subTreePtr->getLeftChildPtr();
+        subTreePtr->setItem(temp->getItem());
+        moveValuesUpTree(temp);
+    }
+    reutrn nullptr;
+}
+
+template <class T>
+LinkedBTreeNode<T>* LinkedBTree<T>::findNode(LinkedBTreeNode<T>* treePtr, const T& target, bool& isSuccessful) const{
+    if(treePtr != nullptr){
+        if(treePtr->getItem() == target){
+            isSuccessful = true;
+            return treePtr;
+        } else {
+            findNode(treePtr->getLeftChildPtr(), target, isSuccessful);
+            findNode(treePtr->getRightChildPtr(), target, isSuccessful);
+        }
+    }
+}
+
+template <class T>
+LinkedBTreeNode<T>* LinkedBTree<T>::removeValue(LinkedBTreeNode<T>* subTreePtr, const T target, bool& isSuccessful){
+    if(subTreePtr == nullptr){
+        isSuccessful = false;
+        return nullptr;
+    }
+    else if(subTreePtr->getItem(0 == target){
+        subTreePtr = moveValuesUpTree(subTreePtr);
+        isSuccessful = true;
+        return subTreePtr;
+    } else {
+        LinkedBTreeNode<T>* temp1 = removeValue(subTreePtr->getLeftChildPtr(), target, isSuccessful);
+        LinkedBTreeNode<T>* temp2 = removeValue(subTreePtr->getRightChildPtr(), target, isSuccessful);
+        if(temp1 != nullptr){
+            return temp1;
+        } else {
+            return temp2;
+        }
+    }
+}
+
+template <class T>
+LinkedBTreeNode<T>* LinkedBTree<T>::copyTree(const LinkedBTreeNode<T>* oldTreeRootPtr) const{
+    LinkedBTreeNode<T>* newTree = nullptr;
+
+    if(oldTreeRootPtr != nullptr){
+        newTree = new LinkedBTreeNode<T>(oldTreeRootPtr->getItem());
+        newTree->setLeftChildPtr(copyTree(oldTreeRootPtr->getLeftChildPtr()));
+        newTree->setRightChildPtr(copyTree(oldTreeRootPtr->getRightChildPtr()));
+    }
+    return newTree;
+}
+
+template <class T>
+void LinkedBTree<T>::destroyTree(LinkedBTreeNode<T>* subTreePtr){
+    if(subTreePtr != nullptr){
+        destroyTree(subTreePtr->getLeftChildPtr());
+    }
+}
+
+template <class T>
+void LinkedBTree<T>::preorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const{
+    if(treePtr != nullptr){
+        T item = treePtr->getItem();
+        visit(item);
+        preorder(visit, treePtr->getLeftChildPtr());
+        preorder(visit, treePtr->getRightChildPtr());
+    }
+}
+
+template <class T>
+void LinkedBTree<T>::inorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const{
+    if(treePtr != nullptr){
+        inorder(visit, treePtr->getLeftChildPtr());
+        T item = treePtr->getItem();
+        visit(item);
+        inorder(visit, treePtr->getRightChildPtr());
+    }
+}
+
+template <class T>
+void LinkedBTree<T>::postorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const{
+    if(treePtr != nullptr){
+        postorde(visit, treePtr->getLeftChildPtr());
+        postorder(visit, treePtr->getRightChildPtr());
+        T item = treePtr->getItem();
+        visit(item);
+    }
+}
+
 // public function definitions
 
 template <class T>
@@ -59,17 +176,24 @@ bool LinkedBTree<T>::isEmpty() const{                   // Checking if it is emp
 
 template <class T>
 int LinkedBTree<T>::getHeight() const{                  // height of tree?
-    return getHeightHelper(rootPtr);
+    return (this->getHeightHelper(rootPtr));
 }
 
 template <class T>
 int LinkedBTree<T>::getNumOfNodes() const{              // getting the number of different nodes
-
+    return (this->getNumOfNodesHelper(rootPtr));
 }
 
 template <class T>
 T LinkedBTree<T>::getRootData() const{                  // does something?    
+    return (rootPtr->getItem());
+}
 
+template <class T>
+void LinkedBTree<T>::setRootData(const T& newData){
+    if(isEmpty()){
+        rootPtr = LinkedBTreeNode<T>(newData);
+    }
 }
 
 template <class T>
@@ -82,35 +206,50 @@ bool LinkedBTree<T>::add(const T& newData){             // add function using th
 
 template <class T>
 bool LinkedBTree<T>::remove(const T& data){
-
+    bool success = false;
+    rootPtr = removeValue(rootPtr, anEntry, success);
+    return success;
 }
 
 template <class T>
 void LinkedBTree<T>::clear(){
-
+    this->destroyTree(rootPtr);
+    rootPtr = nullptr;
 }
 
 template <class T>
 T LinkedBTree<T>::getEntry(const T& anEntry) const{
+    LinkedBTreeNode<T>* itemLock = findNode(rootPtr, anEntry);
 
+    if(itemLock != nullptr){
+        return itemLock->getItem();
+    } else {
+        cout << "No item." << endl;
+    }
 }
 
 template <class T>
 bool LinkedBTree<T>::contains(const T& anEntry) const{
+    LinkedBTreeNode<T>* itemLock = findNode(rootPtr, anEntry);
 
+    if(itemLock == nullptr){
+        return false;
+    } else {
+        return true;
+    }
 }
 
 template <class T>
 void preorderTraverse(void visit(T&)){
-
+    this->preorder(visit, rootPtr);
 }
 
 template <class T>
 void inorderTraverse(void visit(T&)){
-
+    this->inorder(visit, rootPtr);
 }
 
 template <class T>
 void postorderTraverse(void visit(T&)){
-
+    this->postorder(visit, rootPtr);
 }

@@ -38,11 +38,7 @@ T LinkedBTreeNode<T>::getItem() const{
 
 template <class T>
 bool LinkedBTreeNode<T>::isLeaf() const{
-    if(leftChildPtr == nullptr && rightChildPtr == nullptr){
-        return true;
-    } else {
-        return false;
-    }
+    return leftChildPtr == nullptr && rightChildPtr == nullptr
 }
 
 template <class T>
