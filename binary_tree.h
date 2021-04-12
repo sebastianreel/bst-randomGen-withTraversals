@@ -24,7 +24,7 @@ class LinkedBTree : public TreeInterface<T> {
     protected:
         int getHeightHelper(LinkedBTreeNode<T>* subTreePtr) const;
         int getNumOfNodesHelper(LinkedBTreeNode<T>* subTreePtr) const;
-        LinkedBTreeNode<T>* balanceAdd(LinkedBTreeNode<T>* subTreePtr, const T targe, bool& isSuccessful);
+        LinkedBTreeNode<T>* balanceAdd(LinkedBTreeNode<T>* subTreePtr, LinkedBTreeNode<T>* newNodePtr);
         LinkedBTreeNode<T>* moveValuesUpTree(LinkedBTreeNode<T>* subTreePtr);
 
         virtual LinkedBTreeNode<T>* findNode(LinkedBTreeNode<T>* treePtr, const T& target, bool& isSuccessful) const;
@@ -47,7 +47,7 @@ class LinkedBTree : public TreeInterface<T> {
         void clear();
 
         T getEntry(const T& anEntry) const;
-        bool constains(const T& anEntry) const;
+        bool contains(const T& anEntry) const;
 
         void preorderTraverse(void visit(T&)) const;
         void inorderTraverse(void visit(T&)) const;

@@ -21,18 +21,18 @@ class LinkedBTreeNode {
     Node<T>* rightChildPtr;
 public:
     LinkedBTreeNode();
-    LinkedBTreeNode(const T& newData, Node<T> left, Node<T>* right);
+    LinkedBTreeNode(const T& newData, LinkedBTreeNode<T>* left, LinkedBTreeNode<T>* right);
 
     void setItem(const T& newData);
     T getItem() const;
 
     bool isLeaf() const;
 
-    Node<T>* getLeftChildPtr() const;
-    Node<T>* getRightChildPtr() const;
+    LinkedBTreeNode<T>* getLeftChildPtr() const;
+    LinkedBTreeNode<T>* getRightChildPtr() const;
 
-    void setLeftChildPtr(Node<T>* newLeftChildPtr);
-    void setRightChildPtr(Node<T>* newRightChildPtr);
+    void setLeftChildPtr(LinkedBTreeNode<T>* newLeftChildPtr);
+    void setRightChildPtr(LinkedBTreeNode<T>* newRightChildPtr);
 };
 #include "binary_tree_node.cpp"
 #endif
