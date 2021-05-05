@@ -1,61 +1,58 @@
-//------------------------------------------------------------------------------------------------------//
-// Name: Sebastian Reel                                                                                 //
-// Project: Homework Assignment 5 - Binary Search Tree and In Order, Preorder, and Post Order Traversal //
-//                                                                                                      //
-// Description: Randomly generate 100 unique values in the range of [1-200] and insert them into a      //
-// binary search tree (BST). Print height and inorder, preorder, and postoder output of the BST tree.   //
-// Deliver source code and a test file that shows the result of printing height and inorder, preorder,  //
-// and postorder traversal.                                                                             // 
-//                                                                                                      //
-// Due Date: April 11, 2021                                                                             //
-// File Description: Linked Implementation for the binary tree (header file)                            //                                                                                    
-//------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------//
+// Name: Sebastian Reel                                                             //
+// Project: 5 - Binary Search Tree and In Order, Preorder, and Post Order Traversal //
+//                                                                                  //
+// Due Date: April 11, 2021                                                         //
+//----------------------------------------------------------------------------------//
 
-#ifndef linked_btree
-#define linked_btree
-
+#ifndef binary_tree
+#define binary_tree
 #include "tree_interface.h"
 #include "binary_tree_node.h"
 
-template <class T>
-class LinkedBTree : public TreeInterface<T> {
-    private:
-        LinkedBTreeNode<T>* rootPtr;
-    protected:
-        int getHeightHelper(LinkedBTreeNode<T>* subTreePtr) const;
-        int getNumOfNodesHelper(LinkedBTreeNode<T>* subTreePtr) const;
-        LinkedBTreeNode<T>* balanceAdd(LinkedBTreeNode<T>* subTreePtr, LinkedBTreeNode<T>* newNodePtr);
-        LinkedBTreeNode<T>* moveValuesUpTree(LinkedBTreeNode<T>* subTreePtr);
+template<class T>
+class BinaryTree{
+    BTreeNode<T>* rootPtr;
+protected:
+    int getHeightHelper(BTreeNode<T>* subTreePtr) const;
+    int getNumOfNodesHelper(BTreeNode<T>* subTreePtr) const;
+    auto balanceAdd(BTreeNode<T>* subTreePtr, BTreeNode<T>* newNodePtr);
+    BTreeNode<T>* moveValuesUpTree(BTreeNode<T>* subTreePtr);
+    auto copyTree(BTreeNode<T>* oldTreeRootPtr) const;
+    void destroyTree(BTreeNode<T>* subTreePtr);
 
-        virtual LinkedBTreeNode<T>* findNode(LinkedBTreeNode<T>* treePtr, const T& target, bool& isSuccessful) const;
-        virtual LinkedBTreeNode<T>* removeValue(LinkedBTreeNode<T>* subTreePtr, const T target, bool& isSuccessful);
-        
-        LinkedBTreeNode<T>* copyTree(const LinkedBTreeNode<T>* oldTreeRootPtr) const;
-        void destroyTree(LinkedBTreeNode<T>* subTreePtr);
+    virtual BTreeNode<T>* findNode(BTreeNode<T>* treePtr, const T& target, bool& isSuccessful) const;
+    virtual BTreeNode<T>* removeValue(BTreeNode<T>* subTreePtr, const T target, bool& isSuccessful);
 
-        void preorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const;
-        void inorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const;
-        void postorder(void visit(T&), LinkedBTreeNode<T>* treePtr) const;
-    public:
-        LinkedBTree();
+    void preorder(void visit(T&), BTreeNode<T>* treePtr) const;
+    void inorder(void visit(T&), BTreeNode<T>* treePtr) const;
+    void postorder(void visit(T&), BTreeNode<T>* treePtr) const;
+public:
+    //default constructor
+    BinaryTree();
+    //parameterized constructor
+    BinaryTree(T& rootItem);
+    BinaryTree(const T& root, const BTreeNode<T>* leftTreePtr, const BTreeNode<T>* rightTreePtr);
+    //copy constructor
+    BinaryTree(const BTreeNode<T>& tree);
 
-        bool isEmpty() const;
-        int getHeight() const;
-        int getNumOfNodes() const;
-        T getRootData() const;
-        void setRootData(const T& newData);
-        bool add(const T& newData);
-        bool remove(const T& data);
-        void clear();
+    bool isEmpty() const;
+    int getHeight() const;
+    int getNumOfNodes() const;
+    T getRootData() const;
+    bool add(const T& newEntry);
+    bool remove(const T& anEntry);
+    void clear();
+    T getEntry(const T& anEtry) const;
+    bool contains(const T& anEntry) const;
 
-        T getEntry(const T& anEntry) const;
-        bool contains(const T& anEntry) const;
+    void preorderTraverse(void visit(T&)) const;
+    void inorderTraverse(void visit(T&)) const;
+    void postorderTraverse(void visit(T&)) const;
 
-        void preorderTraverse(void visit(T&)) const;
-        void inorderTraverse(void visit(T&)) const;
-        void postorderTraverse(void visit(T&)) const;
-
-        ~LinkedBTree();
+    // try deleting this later and see if it changes anything
+    // this might not be used and would look better without
+    BinaryTree& operator = (const BinaryTree& rightHandSide);
 };
 #include "binary_tree.cpp"
 #endif

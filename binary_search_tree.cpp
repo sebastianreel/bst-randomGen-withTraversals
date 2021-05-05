@@ -1,189 +1,185 @@
-//------------------------------------------------------------------------------------------------------//
-// Name: Sebastian Reel                                                                                 //
-// Project: Homework Assignment 5 - Binary Search Tree and In Order, Preorder, and Post Order Traversal //
-//                                                                                                      //
-// Description: Randomly generate 100 unique values in the range of [1-200] and insert them into a      //
-// binary search tree (BST). Print height and inorder, preorder, and postoder output of the BST tree.   //
-// Deliver source code and a test file that shows the result of printing height and inorder, preorder,  //
-// and postorder traversal.                                                                             // 
-//                                                                                                      //
-// Due Date: April 11, 2021                                                                             //
-// File Description:                                                                                    //
-//------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------//
+// Name: Sebastian Reel                                                             //
+// Project: 5 - Binary Search Tree and In Order, Preorder, and Post Order Traversal //
+//                                                                                  //
+// Due Date: April 11, 2021                                                         //
+//----------------------------------------------------------------------------------//
 
 #include "binary_search_tree.h"
 
-// protected functions
+template<class T>
+BST<T>::BST(): rootPtr(nullptr) {}
 
-template <class T>
-LinkedBTreeNode<T>* LinkedBSearchTree<T>::placeNode(LinkedBTreeNode<T>* subTreePtr, LinkedBTreeNode<T>* newNodePtr){
-    LinkedBTreeNode<T>* temp;
+template<class T>
+BST<T>::BST(const T& rootItem): rootPtr(BTreeNode<T>(rootItem, nullptr, nullptr)) {}
 
+template<class T>
+BST<T>::BST(const BST<T>& tree){
+    rootPtr = this->copytree(tree.rootPtr);
+}
+
+// end constructor list
+// begin protected list
+
+template<class T>
+BTreeNode<T>* BST<T>::placeNode(BTreeNode<T>* subTreePtr, BTreeNode<T>* newNode){
+    BTreeNode<T>* temp;
+    
     if(subTreePtr == nullptr){
-        return newNodePtr;
-    }
-    else if(subTreePtr->getItem() > newNodePtr->getItem()){
-        temp = placeNode(subTreePtr->getLeftChildPtr(), newNodePtr);
-        subTreeptr->setLeftChildPtr(temp);
+        return newNode;
+    } else if(subTreePtr->getItem() > newNode->getItem()){
+        temp = placeNode(subTreePtr->getLeftChildPtr(), newNode);
+        subTreePtr->setLeftChildPtr(temp);
+    
     } else {
-        temp = palceNode(subTreePtr->getRightChildPtr(), newNodePtr);
+        temp = placeNode(subTreePtr->getRightChildPtr(), newNode);
         subTreePtr->setRightChildPtr(temp);
     }
-
     return subTreePtr;
 }
 
-template <class T>
-LinkedBTreeNode<T>* LinkedBSearchTree<T>::removeValue(LinkedBTreeNode<T>* subTreePtr, const T target, bool& isSuccessul){
-    LinkedBTreeNode<T>* temp;
+template<class T>
+BTreeNode<T>* BST<T>::removeValue(BTreeNode<T>* subTreePtr, const T target, bool& isSuccessful){
+    BTreeNode<T>* temp;
 
     if(subTreePtr == nullptr){
         isSuccessful = false;
-        reutrn subTreePtr;
-    }
-    else if(subnTreePtr->getItem() == target){
-        subTreePtr = removeNode(subTreePtr);
-        isSuccessful = truel
         return subTreePtr;
-    }
-    else if(subTreePtr->getItem() > target){
-        temp = temoveValue(subTreePtr->getLeftChildPtr(), target, isSuccessful);
+    } else if(subTreePtr->getItem() == target){
+        subTreePtr = removeNode(subTreePtr);
+        isSuccessful = true;
+        return subTreePtr;
+    } else if(subTreePtr->getItem() > target){
+        temp = removeValue(subTreePtr->getLeftChildPtr(), target, isSuccessful);
         subTreePtr->setLeftChildPtr(temp);
         return subTreePtr;
+
     } else {
-        temp = removeValue(subTreePtr->getRightChildPtr(), target, isSuccessful);
+        temp = temoveValue(subTreePtr->getRightChildPtr(), target, isSuccessful);
         subTreePtr->setRightChildPtr(temp);
         return subTreePtr;
     }
 }
 
 template <class T>
-LinkedBTreeNode<T>* LinkedBSearchTree<T>::removeNode(LinkedBTreeNode<T>* nodePtr){
-    BinaryNode<Type>* nodeConnect;
+BTreeNode<T>* BST<T>::removeNode(BTreeNode<T>* np){
+    BTreeNode<T>* nodeConnect;
 
-    if(nodePtr->isLeaf()){
-        delete nodePtr;
-        nodePtr = nullptr;
-        return nodePtr;
-    }
-    else if(nodePtr->getLeftChildPtr() == nullptr){
-        nodeConnect = nodePtr->getRightChildPtr();
-        delete nodePtr;
-        nodePtr = nullptr;
+    if(np->isLeaf()){
+        delete np;
+        np = nullptr;
+        return np;
+    } else if(np->getLeftChildPtr() == nullptr){
+        nodeConnect = np->getRightChildPtr();
+        delete np;
+        np = nullptr;
         return nodeConnect;
-    }
-    else if(nodePtr->getRightChildPtr() == nullptr){
-        nodeConnect = nodePtr->getLeftChildPtr();
-        delete nodePtr;
-        nodePtr = nullptr;
+    } else if(np->getRightChildPtr() == nullptr){
+        nodeConnect = np->getLeftChildPtr();
+        delete np;
+        np = nullptr;
         return nodeConnect;
-    }
-    else{
-        BinaryNode<Type>* tmpPtr;
+    
+    } else {
+        BTreeNode<T>* temp;
         T newNode;
-        temp = removeLeftmostNode(newNodePtr->getRightChildPtr(), newNode);
-        newNodePtr->setRightChildPtr(temp);
-        newNodePtr->setItem(newNode);
-        return newNodePtr;
+        temp = temoveLeftMostNode(np->getRightChildPtr(), newNode);
+        np->setRightChildPtr(temp);
+        np->setItem(newNode);
+        return np;
     }
 }
 
-template <class T>
-LinkedBTreeNode<T>* LinkedBSearchTree<T>::removeLeftMostNode(LinkedBTreeNode<T>* subTreePtr, T& inOrderSuccessor){
-    if(subTreePtr->getLeftChildPtr() == nullptr){
-        inOrderSuccessor = subTreePtr->getItem();
+template<class T>
+auto BST<T>::removeLeftMostNode(BTreeNode<T>* subTreePtr, T& inorderSuccessor){
+    if(subTreePtr->getleftChildPtr() == nullptr){
+        inorderSuccessor = subTreePtr->getItem();
         return removeNode(subTreePtr);
     } else {
-        LinkedBTreeNode<T>* temp;
-        temp = removeLeftMostNode(subTreePtr->getLeftChildPtr(), inOrderSuccessor);
+        BTreeNode<T>* temp;
+        temp = removeLeftMostNode(subTreePtr->getLeftChild(), inorderSuccessor);
         subTreePtr->setLeftChildPtr(temp);
         return subTreePtr;
     }
 }
 
-template <class T>
-LinkedBTreeNode<T>* LinkedBSearchTree<T>::findNode(LinkedBTreeNode<T>* treePtr, const T& target) const{
+template<class T>
+auto BST<T>::findNode(BTreeNode<T>* treePtr, const T& target) const{
     if(treePtr == nullptr){
-        reutrn nullptr;
-    }
-    else if(treePtr->getItem() == target){
+        return nullptr;
+    } else if(treePtr->getItem() == target){
         return treePtr;
-    }
-    else if(treePtr->getItem() > target){
+    } else if(treePtr->getItem() > target){
         return findNode(treePtr->getLeftChildPtr(), target);
+
     } else {
         return findNode(treePtr->getRightChildPtr(), target);
     }
 }
 
-//public functions
+// end protected section
+// begin the public function definitions
 
-template <class T>
-LinkedBSearchTree<T>::LinkedBSearchTree() : rootPtr(nullptr){}
-
-template <class T>
-bool LinkedBSearchTree<T>::isEmpty() const{
+template<class T>
+bool BST<T>::isEmpty() const{
     return (rootPtr == nullptr);
 }
 
-template <class T>
-int LinkedBSearchTree<T>::getHeight() const{
+template<class T>
+int BST<T>::getHeight() const{
     return (this->getHeightHelper(rootPtr));
 }
 
-template <class T>
-int LinkedBSearchTree<T>::getNumOfNodes() const{
+template<class T>
+int BST<T>::getNumOfNodes() const{
     return (this->getNumOfNodesHelper(rootPtr));
 }
 
-template <class T>
-T LinkedBSearchTree<T>::getRootData() const{
-    return (rotPtr->getItem());
+template<class T>
+T BST<T>::getRootData() const{
+    return (rootPtr->getItem());
 }
 
-template <class T>
-void LinkedBSearchTree<T>::setRootData(const T& newData){
-    is(isEmpty()){
-        rootPtr = LinkedBTreeNode<T>(newData);
+template<class T>
+void BST<T>::setRootData(const T& newData){
+    if(isEmpty()){
+        rootPtr = BTreeNode<T>(newData);
     }
 }
 
-template <class T>
-bool LinkedBSearchTree<T>::add(const T& newEntry){
-    LinkedBTreeNode<T>* temp = new LinkedBTreeNode<T>(newEntry);
-
-    rootPtr = palceNode(rootPtr, temp);
+template<class T>
+bool BST<T>::add(const T& newEntry){
+    BTreeNode<T>* temp = new BTreeNode<T>(newEntry);
+    rootPtr = placeNode(rootPtr, temp);
     return true;
 }
 
-template <class T>
-bool LinkedBSearchTree<T>::remove(const T& anEntry){
+template<class T>
+bool BST<T>::remove(const T& anEntry){
     bool success = false;
     rootPtr = removeValue(rootPtr, anEntry, success);
     return success;
 }
 
-template <class T>
-void LinkedBSearchTree<T>::clear(){
+template<class T>
+void BST<T>::clear(){
     this->destroyTree(rootPtr);
     rootPtr = nullptr;
 }
 
-template <class T>
-T LinkedBSearchTree<T>::getEntry(const T& anEntry) const{
-    LinkedBTreeNode<T>* itemLock = findNode(rootPtr, anEntry);
-
+template<class T>
+T BST<T>::getEntry(const T& anEntry) const{
+    BTreeNode<T>* itemLock = findNode(rootPtr, anEntry);
     if(itemLock != nullptr){
-        reutrn itemLock->getItem();
+        return itemLock->getItem();
     } else {
-        cout << "No item." << endl;
+        std::cout << "No item." << std::endl;
     }
 }
 
-template <class T>
-bool LinkedBSearchTree<T>::contains(const T& anEntry) const{
-    LinkedBTreeNode<T>* itemLock = findNode(root, anEntry);
-
+template<class T>
+bool BST<T>::contains(const T& anEntry) const{
+    BTreeNode<T>* itemLock = findNode(rootPtr, anEntry);
     if(itemLock == nullptr){
         return false;
     } else {
@@ -191,27 +187,26 @@ bool LinkedBSearchTree<T>::contains(const T& anEntry) const{
     }
 }
 
-template <class T>
-void LinkedBSearchTree<T>::preorderTraverse(void visit(T&)) const{
+template<class T>
+void BST<T>::preorderTraverse(void visit(T&)) const{
     this->preorder(visit, rootPtr);
 }
 
-template <class T>
-void LinkedBSearchTree<T>::inorderTraverse(void visit(T&)) const{
-    this->preorder(visit, rootPtr);
+template<class T>
+void BST<T>::inorderTraverse(void visit(T&)) const{
+    this->inorder(visit, rootPtr);
 }
 
-template <class T>
-void LinkedBSearchTree<T>::postorderTraverse(void visit(T&)) const{
+template<class T>
+void BST<T>::postorderTraverse(void visit(T&)) const{
     this->postorder(visit, rootPtr);
 }
 
-template <class T>
-LinkedBSearchTree<T>& LinkedBSearchTree<T>::operator = (const LinkedBSearchTree<T>& rightHandSide){
+template<class T>
+BST<T>& BST<T>::operator = (const BST<T>& rightHandSide){
     if(!isEmpty()){
         clear();
     }
     rootPtr = this->copyTree(rightHandSide.rootPtr);
-
     return *this;
 }

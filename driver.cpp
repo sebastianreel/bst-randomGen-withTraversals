@@ -1,65 +1,70 @@
-//------------------------------------------------------------------------------------------------------//
-// Name: Sebastian Reel                                                                                 //
-// Project: Homework Assignment 5 - Binary Search Tree and In Order, Preorder, and Post Order Traversal //
-//                                                                                                      //
-// Description: Randomly generate 100 unique values in the range of [1-200] and insert them into a      //
-// binary search tree (BST). Print height and inorder, preorder, and postoder output of the BST tree.   //
-// Deliver source code and a test file that shows the result of printing height and inorder, preorder,  //
-// and postorder traversal.                                                                             // 
-//                                                                                                      //
-// Due Date: April 11, 2021                                                                             //
-// File Description: Inserting values into the BST, putting them into a text file, print height,        //
-// inorder, preorder, and postorder                                                                     //
-//------------------------------------------------------------------------------------------------------//
+//----------------------------------------------------------------------------------//
+// Name: Sebastian Reel                                                             //
+// Project: 5 - Binary Search Tree and In Order, Preorder, and Post Order Traversal //
+//                                                                                  //
+// Due Date: April 11, 2021                                                         //
+//----------------------------------------------------------------------------------//
 
+#include "binary_search_tree.h"  
 #include <iostream>
 #include <ctime>
-#include "binary_search_tree.h"
-
+#include <fstream>
 using namespace std;
 
-template <class T>
-void traverse(T& value);
+template<class T>
+void traverse(T& x);
 
 int main(){
     srand(time(NULL));
-
-    int treeValue[100];
-    int x, i, temp;
+    int tree[100];
+    int i, j, temp;
     bool added;
 
-    cout << endl << "100 digit rangning from 1 to 200" << endl << endl;
-    for(x = 1; x <= 100; x++){
+    cout << "=================================================" << endl;
+    cout << "\t\tBINARY SEARCH TREE\t\t" << endl;
+    cout << "Description: 100 randomly generated numbers, ranging from 1 to 200" << endl;
+    cout << "=================================================" << endl << endl;
+
+    for(i = 1; 1 <= 100; i++){
         added = false;
         while(!added){
             added = true;
             temp = 1 + (rand() % 200);
 
-            for(i = 0; i < x - 1; i++){
-                if(temp == treeValue[i]){
+            for(j = 0; j < i - 1; j++){
+                if(temp == tree[j]){
                     added = false;
                 }
             }
-        } 
+        }
+        tree[i-1] = temp;
+        cout << tree[i-1] << 't';
 
-        treeValue[x - 1] = temp;
-        cout << treeValue[x - 1] << '\t';
-
-        if(x % 10 == 0){
-            cout << endl;
+        if(i % 10 == 0){
+            cout << "=================================================" << endl;
         }
     }
-
-    cout << endl;
-
-    LinkedBSearchTree<int> mainT;
-
-    for(x = 0; x < 100; i++){
-        mainT.add(treeValue[i]);
-    }
-
-    cout << "Tree Height = " << mainTree.getHeight() << endl << endl;
     
-    cout << "Tree inrder: " << endl;
-    mainTree.inorderTraverse(traverse);
+    cout << endl; 
+    BST<int> main;
+
+    for(i = 0; i < 100; i++){
+        main.add(tree[i]);
+    }
+    
+    cout << "Tree Height: " << main.getHeight() << endl << endl;
+    cout << "Tree inorder: " << endl;
+        main.inorderTraverse(traverse);
+    cout << "Tree preorder: " << endl;
+        main.preorderTraverse(traverse);
+    cout << "Tree postorder: " << endl;
+        main.postorderTraverse(traverse);
+    cout << endl << endl;
+
+    return 0;
+}
+
+template<class T>
+void traverse(T& value){
+    cout << value << ' ';
 }
