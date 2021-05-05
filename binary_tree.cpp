@@ -29,7 +29,7 @@ int BinaryTree<T>::getHeightHelper(BTreeNode<T>* subTreePtr) const{
     if(subTreePtr == nullptr){
         return 0;
     } else {
-        return (1 + max(getHeightHelper(subTreePtr->getLeftChildPtr()), getHeightHelper(subTreePtr->getRightChildPtr())));
+        return (1 + std::max(getHeightHelper(subTreePtr->getLeftChildPtr()), getHeightHelper(subTreePtr->getRightChildPtr())));
     }
 }
 
@@ -38,7 +38,7 @@ int BinaryTree<T>::getNumOfNodesHelper(BTreeNode<T>* subTreePtr) const{
     if(subTreePtr == nullptr){
         return 0;
     } else {
-        reutnr (1 + getNumOfNodesHelper(subTreePtr->getLeftChildPtr()) + getNumOfNodesHelper(subTreePtr->getRightChildPtr()));
+        return (1 + getNumOfNodesHelper(subTreePtr->getLeftChildPtr()) + getNumOfNodesHelper(subTreePtr->getRightChildPtr()));
     }
 }
 
@@ -70,7 +70,7 @@ BTreeNode<T>* BinaryTree<T>::moveValuesUpTree(BTreeNode<T>* subTreePtr){
         subTreePtr = nullptr;
         return nullptr;
     } else if(subTreePtr->getLeftChildPtr() != nullptr && subTreePtr->getRightChildPtr() == nullptr){
-        temp = subTreePtr->getLeftChild();
+        temp = subTreePtr->getLeftChildPtr();
         delete subTreePtr;
         subTreePtr = nullptr;
         return temp;
@@ -117,6 +117,7 @@ BTreeNode<T>* BinaryTree<T>::findNode(BTreeNode<T>* treePtr, const T& target, bo
             findNode(treePtr->getRightChildPtr(), target, isSuccessful);
         }
     }
+    return nullptr;
 }
 
 template<class T>
@@ -125,7 +126,7 @@ BTreeNode<T>* BinaryTree<T>::removeValue(BTreeNode<T>* subTreePtr, const T targe
         isSuccessful = false;
         return nullptr;
     } else if(subTreePtr->getItem() == target){
-        subTreePtr = movesValuesUpTree(subTreePtr);
+        subTreePtr = moveValuesUpTree(subTreePtr);
         isSuccessful = true;
         return subTreePtr;
     

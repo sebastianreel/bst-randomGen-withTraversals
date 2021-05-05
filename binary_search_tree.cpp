@@ -55,7 +55,7 @@ BTreeNode<T>* BST<T>::removeValue(BTreeNode<T>* subTreePtr, const T target, bool
         return subTreePtr;
 
     } else {
-        temp = temoveValue(subTreePtr->getRightChildPtr(), target, isSuccessful);
+        temp = removeValue(subTreePtr->getRightChildPtr(), target, isSuccessful);
         subTreePtr->setRightChildPtr(temp);
         return subTreePtr;
     }
@@ -83,7 +83,7 @@ BTreeNode<T>* BST<T>::removeNode(BTreeNode<T>* np){
     } else {
         BTreeNode<T>* temp;
         T newNode;
-        temp = temoveLeftMostNode(np->getRightChildPtr(), newNode);
+        temp = removeLeftMostNode(np->getRightChildPtr(), newNode);
         np->setRightChildPtr(temp);
         np->setItem(newNode);
         return np;
@@ -92,12 +92,12 @@ BTreeNode<T>* BST<T>::removeNode(BTreeNode<T>* np){
 
 template<class T>
 auto BST<T>::removeLeftMostNode(BTreeNode<T>* subTreePtr, T& inorderSuccessor){
-    if(subTreePtr->getleftChildPtr() == nullptr){
+    if(subTreePtr->getLeftChildPtr() == nullptr){
         inorderSuccessor = subTreePtr->getItem();
         return removeNode(subTreePtr);
     } else {
         BTreeNode<T>* temp;
-        temp = removeLeftMostNode(subTreePtr->getLeftChild(), inorderSuccessor);
+        temp = removeLeftMostNode(subTreePtr->getLeftChildPtr(), inorderSuccessor);
         subTreePtr->setLeftChildPtr(temp);
         return subTreePtr;
     }
@@ -189,7 +189,7 @@ bool BST<T>::contains(const T& anEntry) const{
 
 template<class T>
 void BST<T>::preorderTraverse(void visit(T&)) const{
-    this->preorder(visit, rootPtr);
+    this->preorder(visit, rootPtr);  
 }
 
 template<class T>

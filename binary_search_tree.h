@@ -9,9 +9,10 @@
 #define binary_search_tree
 #include "binary_tree_node.h"
 #include "binary_tree.h"
+#include <fstream>
 
 template<class T>
-class BST: public BTreeNode<T>{
+class BST: public BinaryTree<T>{
     BTreeNode<T>* rootPtr;
 protected:
     BTreeNode<T>* placeNode(BTreeNode<T>* subTreePtr, BTreeNode<T>* newNode);
